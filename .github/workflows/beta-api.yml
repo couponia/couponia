@@ -24,10 +24,14 @@ jobs:
   initialize-tag:
     runs-on: ubuntu-24.04
     name: Initialize Tag
+    if: github.event.pull_request.merged == true
+    outputs:
+      version: ${{ steps.version.outputs.release_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
       - name: Tag Initialization
+        id: version
         uses: mitch1009/release-trigger@v1.2.6
         with:
           version_file_path: apps/server/package.json
@@ -102,6 +106,7 @@ jobs:
           context: ./apps/server
           tags: |
             ghcr.io/${{ github.repository }}/couponia-beta-api:latest
+            ghcr.io/${{ github.repository }}/couponia-beta-api:${{ needs.initialize-tag.outputs.version }}
             ghcr.io/${{ github.repository }}/couponia-beta-api:${{ steps.short-commit-hash.outputs.SHORT_COMMIT_HASH }}
           push: true
 
@@ -113,6 +118,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     needs: [build, initialize-tag]
     runs-on: ubuntu-24.04
+    if: needs.initialize-tag.outputs.version != ''
     steps:
       - name: checkout
         uses: actions/checkout@v4.2.2
