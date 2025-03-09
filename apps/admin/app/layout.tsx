@@ -3,9 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navigation from "./components/Navigation";
 
-// Force Tailwind CSS to be included
-import "tailwindcss/tailwind.css";
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
