@@ -1,6 +1,6 @@
 {
   "name": "@couponia/api",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Couponia server with Express, tRPC, REST, and GraphQL",
   "main": "main.ts",
   "scripts": {
@@ -8,7 +8,9 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "mgAll": "prisma migrate dev --schema=prisma/admin.prisma",
-    "genAll": "prisma generate && prisma generate --schema=prisma/admin.prisma"
+    "genAll": "prisma generate && prisma generate --schema=prisma/admin.prisma",
+    "beta": "standard-version -S --prerelease beta --tag-prefix=couponia@",
+    "release": "standard-version -S --tag-prefix=couponia@"
   },
   "keywords": [],
   "author": "Mitch Chimwemwe Chanza <mitch.chichan@gmail.com>",

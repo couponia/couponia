@@ -6,6 +6,9 @@ on:
     branches: ["main"]
     paths:
       - "apps/server/**"
+  push:
+    tags:
+      - "couponia@*.*.*-beta.*"
   workflow_dispatch:
 
 permissions:
@@ -18,9 +21,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  initialize-tag:
+    runs-on: ubuntu-24.04
+    name: Initialize Tag
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Tag Initialization
+        uses: mitch1009/release-trigger@v1.2.6
+        with:
+          version_file_path: apps/server/package.json
+          release_branch: main
+          working_directory: apps/server
+          bump_script: pnpm beta
+          git_user_email: ${{ secrets.GIT_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_username: ${{ secrets.GIT_USER_NAME }}
+          git_token: ${{ secrets.GIT_TOKEN }}
   build:
     runs-on: ubuntu-24.04
     name: Build Admin App
+    needs: initialize-tag
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -77,8 +99,7 @@ jobs:
       - name: build docker image
         uses: docker/build-push-action@v4
         with:
-          context: apps/server
-          file: Dockerfile
+          context: ./apps/server
           tags: |
             ghcr.io/${{ github.repository }}/couponia-beta-api:latest
             ghcr.io/${{ github.repository }}/couponia-beta-api:${{ steps.short-commit-hash.outputs.SHORT_COMMIT_HASH }}
@@ -90,7 +111,7 @@ jobs:
     environment:
       name: api-beta
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
+    needs: [build, initialize-tag]
     runs-on: ubuntu-24.04
     steps:
       - name: checkout
