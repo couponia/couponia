@@ -15,7 +15,7 @@
   "keywords": [],
   "author": "Mitch Chimwemwe Chanza <mitch.chichan@gmail.com>",
   "license": "ISC",
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@9.6.0",
   "dependencies": {
     "@prisma/client": "^6.4.1",
     "@trpc/server": "^10.45.1",
