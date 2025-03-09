@@ -39,6 +39,7 @@ jobs:
           pnpm install --no-frozen-lockfile --no-recursive
 
       - name: Build with Next.js
+        working-directory: apps/admin
         run: |
           pnpm build
           touch out/.nojekyll
