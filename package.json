@@ -1,0 +1,15 @@
+{
+  "name": "couponia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "admin": "pnpm --filter @couponia/admin",
+    "web": "pnpm --filter @couponia/website",
+    "api": "pnpm --filter @couponia/api"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.2"
+}
