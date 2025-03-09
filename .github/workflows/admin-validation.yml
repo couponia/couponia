@@ -20,7 +20,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    name: Build Admin App
+    name: Validate Admin App
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
