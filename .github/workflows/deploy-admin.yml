@@ -43,12 +43,12 @@ jobs:
         working-directory: apps/admin
         run: |
           pnpm build
-          touch out/.nojekyll
+          touch build/client/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/admin/out
+          path: apps/admin/build/client
 
   deploy:
     environment:
