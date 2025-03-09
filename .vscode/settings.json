@@ -1,0 +1,6 @@
+{
+    "exportall.config.folderListener": [
+        "/apps/server/routes/graphql",
+        "/apps/server/routes"
+    ]
+}
