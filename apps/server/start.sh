@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+npx prisma db push --accept-data-loss
+
+node dist/main.js
