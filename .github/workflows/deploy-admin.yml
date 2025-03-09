@@ -35,10 +35,12 @@ jobs:
           version: 10.5.2
 
       - name: Install dependencies
+        working-directory: apps/admin
         run: |
           pnpm install --no-frozen-lockfile --no-recursive
 
       - name: Build with Next.js
+        working-directory: apps/admin
         run: |
           pnpm build
           touch out/.nojekyll

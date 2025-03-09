@@ -6,6 +6,9 @@ export default function Home() {
      <h1>
       couponia admin website
      </h1>
+     <p>
+      this is the admin website for couponia
+     </p>
     </div>
   );
 }
