@@ -15,5 +15,17 @@ const config: Config = {
     },
   },
   plugins: [],
+  // Ensure all styles are included in production
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
+  // Disable purging in production since we're using static export
+  safelist: [
+    {
+      pattern: /./, // This ensures no styles are purged
+    },
+  ],
 };
+
 export default config;
