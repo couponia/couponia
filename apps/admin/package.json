@@ -11,10 +11,16 @@
   "dependencies": {
     "@react-router/node": "^7.3.0",
     "@react-router/serve": "^7.3.0",
+    "@trpc/client": "^10.45.2",
+    "@trpc/react": "^9.27.4",
+    "@trpc/server": "^10.45.2",
+    "add": "^2.0.6",
     "isbot": "^5.1.17",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.3.0"
+    "react-query": "^3.39.3",
+    "react-router": "^7.3.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@react-router/dev": "^7.3.0",
