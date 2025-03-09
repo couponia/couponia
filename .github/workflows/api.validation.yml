@@ -1,0 +1,68 @@
+name: API Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: ["main"]
+    paths:
+      - "apps/server/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    name: Validate API Server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10.5.2
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Cache build output
+        uses: actions/cache@v4
+        with:
+          path: apps/server/dist
+          key: ${{ runner.os }}-server-build-${{ hashFiles('apps/server/**') }}
+          restore-keys: |
+            ${{ runner.os }}-server-build-
+
+      - name: Install dependencies
+        working-directory: apps/server
+        run: |
+          pnpm install --no-frozen-lockfile --no-recursive
+
+      - name: Build with API Server
+        working-directory: apps/server
+        run: |
+          pnpm build && pnpm genAll

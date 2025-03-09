@@ -1,0 +1,45 @@
+name: Admin Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: ["main"]
+    paths:
+      - "apps/admin/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    name: Validate Admin App
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: '20'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10.5.2
+
+      - name: Install dependencies
+        working-directory: apps/admin
+        run: |
+          pnpm install --no-frozen-lockfile --no-recursive
+
+      - name: Build with Next.js
+        working-directory: apps/admin
+        run: |
+          pnpm build

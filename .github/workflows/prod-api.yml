@@ -1,0 +1,130 @@
+name: Deploy Production API Server 
+
+on:
+  pull_request:
+    types: [closed]
+    branches: ["production"]
+    paths:
+      - "apps/server/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+  actions: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    name: Build Production API Server
+    outputs:
+      short-commit-hash: ${{ steps.short-commit-hash.outputs.SHORT_COMMIT_HASH }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: '20'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10.5.2
+
+      - name: Install dependencies
+        working-directory: apps/server
+        run: |
+          pnpm install --no-frozen-lockfile --no-recursive
+
+      - name: Build with API Server
+        working-directory: apps/server
+        run: |
+          pnpm build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/server/dist
+      - name: geneate short commit hash
+        id: short-commit-hash
+        shell: bash
+        run: |
+          echo "SHORT_COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: build docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./apps/server
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/couponia-api:latest
+            ghcr.io/${{ github.repository }}/couponia-api:${{ steps.short-commit-hash.outputs.SHORT_COMMIT_HASH }}
+
+  deploy:
+    name: Deploy API Server
+
+    environment:
+      name: api-prod
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.2.2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Login to Azure
+        id: deployment
+        uses: azure/login@v2.2.0
+        with:
+          creds: ${{ secrets.AZURE_GLOBAL_CREDS }}
+          
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v3.0.2
+        with:
+          app-name: ${{ secrets.AZURE_APP_NAME }}
+          slot-name: api
+          images: ghcr.io/${{ github.repository }}/couponia-api:latest
+          
+  summary:
+    runs-on: ubuntu-24.04
+    needs: [build,deploy]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: display deployment summary
+        run: |
+          echo "Deployment Summary:" >> $GITHUB_STEP_SUMMARY
+          echo "  - Repository: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "  - Tag: latest" >> $GITHUB_STEP_SUMMARY
+          echo "  - Platform: linux/amd64" >> $GITHUB_STEP_SUMMARY
+          echo "  - Image: ghcr.io/${{ github.repository }}/couponia-api:latest" >> $GITHUB_STEP_SUMMARY
+          echo "  - Image: ghcr.io/${{ github.repository }}/couponia-api:${{ needs.build.outputs.short-commit-hash }}" >> $GITHUB_STEP_SUMMARY  
+          echo "  - URL: https://api.couponia.co.za" >> $GITHUB_STEP_SUMMARY
+          echo "  - Commit Hash: ${{ needs.build.outputs.short-commit-hash }}" >> $GITHUB_STEP_SUMMARY
+          echo "  - https://api.couponia.co.za" >> $GITHUB_STEP_SUMMARY
+          
+        
