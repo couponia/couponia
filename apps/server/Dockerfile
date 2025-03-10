@@ -45,4 +45,4 @@ ENV PORT=3000
 EXPOSE 3000 3001
 
 # Start the server
-CMD ["./start.sh"] 
+ENTRYPOINT ["./start.sh"] 
