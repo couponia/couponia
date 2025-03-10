@@ -55,7 +55,7 @@ app.use(
 
 // GraphQL route
 app.use(
-    '/api/graphql',
+    '/v1/graphql',
     graphqlHTTP({
         schema: graphqlSchema,
         rootValue: graphqlRoot,
@@ -66,9 +66,9 @@ app.use(
 // Start server
 app.listen(PORT, () => {
     console.log({
-        server: `http://localhost:${PORT}`,
-        rest: `http://localhost:${PORT}/api/rest`,
-        trpc: `http://localhost:${PORT}/api/trpc`,
-        graphql: `http://localhost:${PORT}/api/graphql`,
+        home: `http://localhost:${PORT}`,
+        restApi: `http://localhost:${PORT}/api/rest`,
+        trpcApi: `http://localhost:${PORT}/api/trpc`,
+        graphqlApi: `http://localhost:${PORT}/api/graphql`,
     });
 });
