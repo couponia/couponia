@@ -165,7 +165,7 @@ jobs:
           echo "Release Version: couponia-api@${{ needs.initialize-tag.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "Api URL : https://beta-api.couponia.com" >> $GITHUB_STEP_SUMMARY
   monitor-failures:
-    needs:  [initialize-tag, create-release-beta-api, create-release-summary]
+    needs:  [initialize-tag, create-release-beta-api, create-release-summary, deploy]
     runs-on: ubuntu-24.04
     name: monitor deployment failures 
 

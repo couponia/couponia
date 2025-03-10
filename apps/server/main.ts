@@ -59,7 +59,7 @@ app.use(
     graphqlHTTP({
         schema: graphqlSchema,
         rootValue: graphqlRoot,
-        graphiql: true, // Enable GraphiQL interface for testing
+        graphiql: process.env.NODE_ENV === 'development' ? true : false, // Enable GraphiQL interface for testing
     })
 );
 
