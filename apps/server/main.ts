@@ -68,7 +68,7 @@ app.listen(PORT, () => {
     console.log({
         home: `http://localhost:${PORT}`,
         restApi: `http://localhost:${PORT}/api/rest`,
-        trpcApi: `http://localhost:${PORT}/api/trpc`,
+        trpcApi: `http://localhost:${PORT}/api/trpc/hello.hello`,
         graphqlApi: `http://localhost:${PORT}/api/graphql`,
     });
 });
