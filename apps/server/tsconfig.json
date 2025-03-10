@@ -11,7 +11,10 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"]
+      "*": ["node_modules/*"],
+      "@/lib/*": ["lib/*"],
+      "@/core/*": ["core/*"],
+      "@/routes/*": ["routes/*"],
     }
   },
   "include": ["./**/*.ts"],

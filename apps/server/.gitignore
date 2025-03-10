@@ -4,3 +4,5 @@ node_modules
 beta.env
 prod.env
 .DS_Store
+dist
+.env.local
