@@ -36,6 +36,7 @@ RUN pnpm install --prod  && npx prisma generate && npx prisma generate --schema 
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/views ./dist/views
 
 # Set environment variables
 ENV NODE_ENV=production
