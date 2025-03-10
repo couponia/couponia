@@ -3,7 +3,7 @@ name: Deploy Couponia API Server
 on:
   pull_request:
     types: [closed]
-    branches: ["main"]
+    branches: ["production"]
     paths:
       - "apps/server/**"
   push:
