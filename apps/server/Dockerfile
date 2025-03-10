@@ -32,7 +32,7 @@ COPY ./prisma ./prisma
 RUN chmod +x ./start.sh
 
 # Install production dependencies only
-RUN pnpm install --prod  && pnpm genAll
+RUN pnpm install --prod  && npx prisma generate && npx prisma generate --schema ./prisma/admin.prisma
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
