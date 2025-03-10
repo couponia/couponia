@@ -5,7 +5,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install pnpm globally
-RUN npm install -g pnpm@10.5.2
+RUN npm install -g 9.6.0
 
 # Copy package files
 COPY package.json ./
@@ -26,7 +26,7 @@ FROM node:20-alpine AS production
 WORKDIR /app
 
 # Install pnpm globally
-RUN npm install -g pnpm@10.5.2
+RUN npm install -g 9.6.0
 
 # Copy package files
 COPY package.json ./
