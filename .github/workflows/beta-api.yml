@@ -139,7 +139,7 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_APP_NAME }}
           slot-name: beta-api
-          ghcr.io/${{ github.repository }}/couponia-beta-api:${{ needs.initialize-tag.outputs.version }}
+          images: ghcr.io/${{ github.repository }}/couponia-beta-api:${{ needs.initialize-tag.outputs.version }}
 
   create-release-beta-api:
     name: Create Release Beta API
