@@ -55,7 +55,7 @@ app.use(
 
 // GraphQL route
 app.use(
-    '/api/graphql',
+    '/v1/graphql',
     graphqlHTTP({
         schema: graphqlSchema,
         rootValue: graphqlRoot,
