@@ -28,14 +28,14 @@ RUN npm install -g pnpm@9.6.0
 # Copy package files and start script
 COPY ./package.json ./
 COPY ./start.sh ./
+COPY ./prisma ./prisma
 RUN chmod +x ./start.sh
 
 # Install production dependencies only
-RUN pnpm install --prod
+RUN pnpm install --prod  && pnpm genAll
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
 
 # Set environment variables
 ENV NODE_ENV=production
