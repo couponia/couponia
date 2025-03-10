@@ -17,7 +17,7 @@ RUN pnpm install
 COPY . .
 
 # Build the application
-RUN pnpm build && pnpm genAll
+RUN pnpm genAll && pnpm build 
 
 # Production stage
 FROM node:20-alpine AS production
