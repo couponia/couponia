@@ -1,34 +1,44 @@
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
   extensions = [pgcrypto()]
 }
 
 model User {
+  id                 String   @id @default(uuid())
+  email              String   @unique
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  firstName          String?
+  lastName           String?
+  middleName         String?
+  phone              String?  @unique
+  address            String?
+  city               String?
+  fullName           String?
+  state              String?
+  zip                String?
+  country            String?  @default("South Africa")
+  isActive           Boolean  @default(true)
+  isEmailVerified    Boolean  @default(false)
+  isPhoneVerified    Boolean  @default(false)
+  isTwoFactorEnabled Boolean  @default(false)
+  twoFactorSecret    String?
+  authStore          Auth?
+}
+
+model Auth {
   id        String   @id @default(uuid())
-  email     String   @unique
+  hash      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  firstName String?
-  lastName  String?
-  middleName String?
-  phone     String? @unique
-  address   String?
-  city      String? 
-  fullName  String? 
-  state     String?
-  zip       String?
-  country   String? @default("South Africa")
-  isActive  Boolean  @default(true)
-  isEmailVerified Boolean @default(false)
-  isPhoneVerified Boolean @default(false)
-  isTwoFactorEnabled Boolean @default(false)
-  twoFactorSecret String?
-  
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@unique([userId])
 }
