@@ -1,6 +1,6 @@
 {
   "name": "@couponia/api",
-  "version": "0.0.1-beta.8",
+  "version": "0.0.1-beta.9",
   "description": "Couponia server with Express, tRPC, REST, and GraphQL",
   "main": "main.ts",
   "scripts": {
