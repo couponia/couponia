@@ -112,7 +112,7 @@ jobs:
     name: Deploy API Server
 
     environment:
-      name: api-beta
+      name: api-prod
       url: ${{ steps.deployment.outputs.page_url }}
     needs: [build, initialize-tag]
     runs-on: ubuntu-24.04
