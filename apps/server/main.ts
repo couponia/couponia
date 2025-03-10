@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 4000;
 
 app.disable('x-powered-by');
 app.disable('etag');
+app.disable('x-frame-options');
 // Middleware
 app.use(cors({
     origin: process.env.ALLOWED_ORIGINS?.split(','),
