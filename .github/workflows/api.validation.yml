@@ -61,8 +61,8 @@ jobs:
         working-directory: apps/server
         run: |
           pnpm install --no-frozen-lockfile --no-recursive
-
+          pnpm genAll
       - name: Build with API Server
         working-directory: apps/server
         run: |
-          pnpm build && pnpm genAll
+          pnpm build 

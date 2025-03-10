@@ -4,6 +4,8 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { graphqlHTTP } from 'express-graphql';
 import { appRouter,graphqlSchema, graphqlRoot  } from './routes';
 import dotenv from 'dotenv';
+import expressEjsLayouts from 'express-ejs-layouts';
+import path from 'path';
 
 dotenv.config();
 
@@ -19,6 +21,25 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json());
+
+// Set up EJS
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(expressEjsLayouts);
+app.set('layout', 'layouts/main');
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Home page route
+app.get('/', (req, res) => {
+    res.render('home');
+});
+
+// Status page route
+app.get('/status', (req, res) => {
+    res.render('status');
+});
 
 // REST routes
 app.get('/api/rest/hello', (req, res) => {

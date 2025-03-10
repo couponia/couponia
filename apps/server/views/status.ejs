@@ -1,0 +1,70 @@
+<%- contentFor('body') %>
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+        <div class="p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">System Status</h1>
+                <div id="overall-status" class="px-4 py-2 rounded-full text-sm font-semibold">
+                    <!-- Status will be set by JS -->
+                </div>
+            </div>
+
+            <div class="grid gap-6" id="services-grid">
+                <!-- Services will be populated by JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function updateStatus() {
+    try {
+        const response = await fetch('/api/rest/health');
+        const data = await response.json();
+        
+        // Update overall status
+        const overallStatus = document.getElementById('overall-status');
+        overallStatus.textContent = data.status.toUpperCase();
+        overallStatus.className = `px-4 py-2 rounded-full text-sm font-semibold ${
+            data.status === 'healthy' ? 'bg-green-100 text-green-800' :
+            data.status === 'degraded' ? 'bg-yellow-100 text-yellow-800' :
+            'bg-red-100 text-red-800'
+        }`;
+
+        // Update services grid
+        const servicesGrid = document.getElementById('services-grid');
+        servicesGrid.innerHTML = '';
+
+        Object.entries(data.services).forEach(([serviceName, info]) => {
+            const serviceCard = document.createElement('div');
+            serviceCard.className = 'bg-gray-50 p-6 rounded-lg';
+            
+            const responseTime = info.responseTime ? `${info.responseTime}ms` : 'N/A';
+            const lastChecked = new Date(info.lastChecked).toLocaleTimeString();
+            
+            serviceCard.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700 capitalize">${serviceName}</h2>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium ${
+                        info.status === 'up' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }">
+                        ${info.status.toUpperCase()}
+                    </span>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-gray-600">Response Time: ${responseTime}</p>
+                    <p class="text-gray-600">Last Checked: ${lastChecked}</p>
+                </div>
+            `;
+            
+            servicesGrid.appendChild(serviceCard);
+        });
+    } catch (error) {
+        console.error('Error fetching status:', error);
+    }
+}
+
+// Update status immediately and every 30 seconds
+updateStatus();
+setInterval(updateStatus, 30000);
+</script> 
