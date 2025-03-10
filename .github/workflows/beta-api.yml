@@ -140,3 +140,93 @@ jobs:
           app-name: ${{ secrets.AZURE_APP_NAME }}
           slot-name: beta-api
           images: ghcr.io/${{ github.repository }}/couponia-beta-api:latest
+  create-release-beta-api:
+    name: Create Release Beta API
+    runs-on: ubuntu-24.04
+    needs: [build, initialize-tag]
+    if: needs.initialize-tag.outputs.version != ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Create Release
+        uses: pipe-cd/actions-gh-release@v2.6.0
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+  create-release-summary:
+    name: Create Release Summary
+    runs-on: ubuntu-24.04
+    needs: [initialize-tag,create-release-beta-api]
+    if: needs.initialize-tag.outputs.version != ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Create Release Summary
+        run: |
+          echo "Release Version: couponia-api@${{ needs.initialize-tag.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "Api URL : https://beta-api.couponia.com" >> $GITHUB_STEP_SUMMARY
+  monitor-failures:
+    needs:  [initialize-tag, create-release-beta-api, create-release-summary]
+    runs-on: ubuntu-24.04
+    name: monitor deployment failures 
+
+    if: failure()
+    permissions:
+      actions: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Create GitHub Issue on Failure
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const failedJobs = [];
+            const workflow = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            
+            const jobs = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            
+            for (const job of jobs.data.jobs) {
+              if (job.conclusion === 'failure') {
+                failedJobs.push({
+                  name: job.name,
+                  steps: job.steps.filter(step => step.conclusion === 'failure').map(step => step.name)
+                });
+              }
+            }
+            
+            if (failedJobs.length > 0) {
+              const issueBody = `
+            ## Workflow Failure Alert
+            
+            Workflow: ${workflow.data.name}
+            Run: [#${context.runNumber}](${workflow.data.html_url})
+            Branch: ${workflow.data.head_branch}
+            Commit: ${workflow.data.head_sha}
+            
+            ### Failed Jobs:
+            ${failedJobs.map(job => `
+            #### ${job.name}
+            Failed steps:
+            ${job.steps.map(step => `- ${step}`).join('\n')}
+            `).join('\n')}
+            
+            Please investigate and fix these issues.
+            `;
+            
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🚨 Workflow Failure: ${workflow.data.name} #${context.runNumber}`,
+                body: issueBody,
+                labels: ['workflow-failure', 'bug']
+              });
+            }
+

@@ -43,6 +43,5 @@ ENV PORT=3000
 
 # Expose port
 EXPOSE 3000 3001
-RUN ls -a
 # Start the server
 CMD ["/bin/sh", "./start.sh"] 
