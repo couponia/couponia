@@ -43,6 +43,6 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 # Expose port
-EXPOSE 3000 3001
+EXPOSE 3000
 # Start the server
 CMD ["/bin/sh", "./start.sh"] 
