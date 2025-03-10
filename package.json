@@ -6,7 +6,9 @@
   "scripts": {
     "admin": "pnpm --filter @couponia/admin",
     "web": "pnpm --filter @couponia/website",
-    "api": "pnpm --filter @couponia/api"
+    "api": "pnpm --filter @couponia/api",
+    "beta": "pnpm --filter @couponia/api beta",
+    "release": "pnpm --filter @couponia/api release"
   },
   "keywords": [],
   "author": "",
