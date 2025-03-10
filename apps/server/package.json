@@ -9,8 +9,8 @@
     "start": "node dist/main.js",
     "mgAll": "prisma migrate dev --schema=prisma/admin.prisma",
     "genAll": "prisma generate && prisma generate --schema=prisma/admin.prisma",
-    "beta": "standard-version -S --prerelease beta --tag-prefix=couponia@",
-    "release": "standard-version -S --tag-prefix=couponia@"
+    "beta": "standard-version -S --prerelease beta --tag-prefix=couponia-api@",
+    "release": "standard-version -S --tag-prefix=couponia-api@"
   },
   "keywords": [],
   "author": "Mitch Chimwemwe Chanza <mitch.chichan@gmail.com>",

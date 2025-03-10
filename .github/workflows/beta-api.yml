@@ -8,7 +8,7 @@ on:
       - "apps/server/**"
   push:
     tags:
-      - "couponia@*.*.*-beta.*"
+      - "couponia-api@*.*.*-beta.*"
 
 permissions:
   contents: write
@@ -165,8 +165,8 @@ jobs:
         uses: actions/checkout@v4.2.2
       - name: Create Release Summary
         run: |
-          echo "Release Version: couponia-api@${{ needs.initialize-tag.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "Api URL : https://beta-api.couponia.com" >> $GITHUB_STEP_SUMMARY
+          echo "Release Version: couponia-beta-api@${{ needs.initialize-tag.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "Api URL : https://beta-api.couponia.co.za" >> $GITHUB_STEP_SUMMARY
   monitor-failures:
     needs:  [initialize-tag, create-release-beta-api, create-release-summary, deploy]
     runs-on: ubuntu-24.04
