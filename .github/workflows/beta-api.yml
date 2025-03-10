@@ -10,7 +10,6 @@ on:
     tags:
       - "couponia@*.*.*-beta.*"
 
-
 permissions:
   contents: write
   pages: write
@@ -99,10 +98,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GIT_TOKEN }}
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: apps/server/dist
+      
       - name: build docker image
         uses: docker/build-push-action@v4
         with:
