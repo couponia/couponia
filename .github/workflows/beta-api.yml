@@ -9,7 +9,6 @@ on:
   push:
     tags:
       - "couponia-api@*.*.*-beta.*"
-
 permissions:
   contents: write
   pages: write
