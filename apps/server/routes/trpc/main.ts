@@ -1,18 +1,9 @@
-import { initTRPC } from "@trpc/server";
-import { z } from "zod";
-
-// Initialize tRPC
-const t = initTRPC.create();
-const router = t.router;
-const publicProcedure = t.procedure;
-
+import { router } from "./config";
+import { authRouter, helloRouter } from "./routes";
 // tRPC API router
 export const appRouter = router({
-  hello: publicProcedure
-    .input(z.string().optional())
-    .query(({ input }) => {
-      return `Hello ${input ?? 'World'} from tRPC!`;
-    }),
+  hello: helloRouter,
+  auth: authRouter,
 });
 
 export type AppRouter = typeof appRouter;

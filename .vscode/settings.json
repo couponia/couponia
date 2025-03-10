@@ -1,6 +1,8 @@
 {
     "exportall.config.folderListener": [
         "/apps/server/routes/graphql",
-        "/apps/server/routes"
+        "/apps/server/routes",
+        "/apps/server/routes/trpc/routes",
+        "/apps/server/routes/trpc"
     ]
 }
