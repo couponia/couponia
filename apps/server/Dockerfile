@@ -26,8 +26,8 @@ WORKDIR /app
 RUN npm install -g pnpm@9.6.0
 
 # Copy package files and start script
-COPY package.json ./
-COPY start.sh ./
+COPY ./package.json ./
+COPY ./start.sh ./
 RUN chmod +x ./start.sh
 
 # Install production dependencies only
@@ -43,6 +43,6 @@ ENV PORT=3000
 
 # Expose port
 EXPOSE 3000 3001
-
+RUN ls -a
 # Start the server
-ENTRYPOINT ["./start.sh"] 
+CMD ["/bin/sh", "./start.sh"] 
