@@ -10,7 +10,6 @@ on:
     tags:
       - "couponia@*.*.*-beta.*"
 
-
 permissions:
   contents: write
   pages: write
