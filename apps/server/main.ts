@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { graphqlHTTP } from 'express-graphql';
-import { appRouter,graphqlSchema, graphqlRoot  } from './routes';
+import { appRouter,graphqlSchema, graphqlRoot, restRouter  } from './routes';
 import dotenv from 'dotenv';
 import expressEjsLayouts from 'express-ejs-layouts';
 import path from 'path';
@@ -42,10 +42,7 @@ app.get('/status', (req, res) => {
 });
 
 // REST routes
-app.get('/api/rest/hello', (req, res) => {
-    const name = req.query.name as string | undefined;
-    res.json({ message: `Hello ${name ?? 'World'} from REST!` });
-});
+app.use('/api/rest', restRouter);
 
 // tRPC routes
 app.use(
